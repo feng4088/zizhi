@@ -1,0 +1,101 @@
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+
+
+local Window = OrionLib:MakeWindow({
+    Name = "枫脚本",
+    HidePremium = false,
+    SaveConfig = true,
+    ConfigFolder = "MapleConfig",
+    IntroEnabled = false
+})
+
+
+local circleButton = Instance.new("TextButton")
+circleButton.Name = "MapleMinimizeButton"
+circleButton.Size = UDim2.new(0, 50, 0, 50)
+circleButton.Position = UDim2.new(1, -60, 1, -60)
+circleButton.AnchorPoint = Vector2.new(1, 1)
+circleButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+circleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+circleButton.Text = "枫"
+circleButton.Font = Enum.Font.GothamBold
+circleButton.TextSize = 20
+circleButton.ZIndex = 100
+
+
+circleButton.AutoButtonColor = false
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(1, 0)
+corner.Parent = circleButton
+
+
+local dragging = false
+local dragInput, dragStart, startPos
+
+
+circleButton.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = circleButton.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+
+circleButton.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInput = input
+    end
+end)
+
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if dragging and input == dragInput then
+        local delta = input.Position - dragStart
+        circleButton.Position = UDim2.new(
+            startPos.X.Scale, 
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale, 
+            startPos.Y.Offset + delta.Y
+        )
+    end
+end)
+
+
+circleButton.MouseButton1Click:Connect(function()
+    OrionLib:ToggleUI()
+end)
+
+
+circleButton.MouseEnter:Connect(function()
+    game:GetService("TweenService"):Create(circleButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(20, 20, 20)}):Play()
+end)
+
+circleButton.MouseLeave:Connect(function()
+    game:GetService("TweenService"):Create(circleButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(0, 0, 0)}):Play()
+end)
+
+
+circleButton.Parent = game:GetService("CoreGui")
+
+local Tab = Window:MakeTab({
+	Name = "通用",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+Tab:AddButton({
+	Name = "spy",
+	Callback = function()
+      		print("来啦")
+loadstring(game:HttpGet('https://raw.githubusercontent.com/useranewrff/roblox/main/spy%E6%B1%89%E5%8C%96%20(1).txt'))()
+  	end    
+})
+
+OrionLib:Init()
